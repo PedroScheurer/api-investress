@@ -2,6 +2,7 @@ package com.pedroscheurer.investress.api.controllers;
 
 import com.pedroscheurer.investress.api.dtos.LoginDTO;
 import com.pedroscheurer.investress.api.dtos.RegisterDTO;
+import com.pedroscheurer.investress.api.dtos.UserResponseDTO;
 import com.pedroscheurer.investress.api.entities.TypeUser;
 import com.pedroscheurer.investress.api.entities.UserEntity;
 import com.pedroscheurer.investress.api.services.UserService;
@@ -28,14 +29,18 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserEntity> register(@RequestBody RegisterDTO dto) throws Exception {
+    public ResponseEntity<UserResponseDTO> register(@RequestBody RegisterDTO dto) throws Exception {
         UserEntity user = new UserEntity();
         BeanUtils.copyProperties(dto, user);
         user.setType(TypeUser.Common);
 
         service.save(user);
 
-        return ResponseEntity.status(201).body(user);
+        return ResponseEntity.status(201).body(new UserResponseDTO(
+                user.getId(),
+                user.getNome(),
+                user.getEmail(),
+                user.getType()));
     }
 
     @PostMapping("/login")

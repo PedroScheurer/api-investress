@@ -26,7 +26,7 @@ public class UserEntity implements UserDetails {
     @Column(length = 100, nullable = false)
     private String password;
 
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private TypeUser type;
 
     public Long getId() {
