@@ -23,24 +23,19 @@ public class InvestimentoController {
 
     @PostMapping
     public ResponseEntity<InvestimentoResponseDTO> save(@RequestBody InvestimentoDTO dto) {
-        InvestimentoEntity investimento = new InvestimentoEntity();
-        BeanUtils.copyProperties(dto, investimento);
+        InvestimentoEntity novoInvestimento = new InvestimentoEntity();
+        BeanUtils.copyProperties(dto, novoInvestimento);
 
-        service.save(investimento);
+        service.save(novoInvestimento"");
 
-        return ResponseEntity.status(200).body(new InvestimentoResponseDTO(
-                investimento.getId(), investimento.getNome(), investimento.getRetornoInvestimento(),
-                investimento.getType(), investimento.getValorAtual(), investimento.getValorInvestido(),
-                new UserResponseDTO(investimento.getUser().getId(), investimento.getUser().getNome(),
-                        investimento.getUser().getEmail(), investimento.getUser().getType())
-        ));
+        return ResponseEntity.status(200).body(retornoBody(novoInvestimento));
     }
 
-    @GetMapping
+    @GetMapping(params = "page")
     public ResponseEntity<Page<InvestimentoEntity>> buscar(@RequestParam int page) {
-        Page<InvestimentoEntity> foundPage = service.listarTodos(page);
+        Page<InvestimentoEntity> paginaEncontrada = service.listarTodos(page);
 
-        return ResponseEntity.status(200).body(foundPage);
+        return ResponseEntity.status(200).body(paginaEncontrada);
     }
 
     @GetMapping(params = "id")
@@ -48,11 +43,14 @@ public class InvestimentoController {
         InvestimentoEntity investimentoEncontrado = service.listarPorId(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
 
-        return ResponseEntity.status(200).body(new InvestimentoResponseDTO(
-                investimentoEncontrado.getId(), investimentoEncontrado.getNome(), investimentoEncontrado.getRetornoInvestimento(),
-                investimentoEncontrado.getType(), investimentoEncontrado.getValorAtual(), investimentoEncontrado.getValorInvestido(),
-                new UserResponseDTO(investimentoEncontrado.getUser().getId(), investimentoEncontrado.getUser().getNome(),
-                        investimentoEncontrado.getUser().getEmail(), investimentoEncontrado.getUser().getType())));
+        return ResponseEntity.status(200).body(retornoBody(investimentoEncontrado));
+    }
+
+    @GetMapping(params = {"nome", "page"})
+    public ResponseEntity<Page<InvestimentoEntity>> buscarPorNome(@RequestParam String nome, int page){
+        Page<InvestimentoEntity> paginaEncontrada = service.listarPorNome(page, nome);
+
+        return ResponseEntity.status(200).body(paginaEncontrada);
     }
 
     @ExceptionHandler(Exception.class)
@@ -61,4 +59,11 @@ public class InvestimentoController {
         return ResponseEntity.status(400).body(message);
     }
 
+
+    private InvestimentoResponseDTO retornoBody (InvestimentoEntity investimento){
+        return new InvestimentoResponseDTO(investimento.getId(), investimento.getNome(),investimento.getRetornoInvestimento(),
+                investimento.getType(), investimento.getValorAtual(), investimento.getValorInvestido(),
+                new UserResponseDTO(investimento.getUser().getId(), investimento.getUser().getNome(),
+                        investimento.getUser().getEmail(), investimento.getUser().getType()));
+    }
 }

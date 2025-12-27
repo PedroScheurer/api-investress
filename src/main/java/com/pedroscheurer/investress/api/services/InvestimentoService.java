@@ -48,6 +48,11 @@ public class InvestimentoService {
         return repository.findById(id);
     }
 
+    public Page<InvestimentoEntity> listarPorNome(int pageNumber, String nome) {
+        Pageable pageable = PageRequest.of(pageNumber, 15);
+        return repository.findByNomeContainsIgnoreCase(nome, pageable);
+    }
+
     private void validarInvestimento(InvestimentoEntity investimento) {
         if (investimento == null) {
             throw new IllegalArgumentException("Investimento invalido");
