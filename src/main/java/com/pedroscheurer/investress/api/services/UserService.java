@@ -31,14 +31,13 @@ public class UserService implements UserDetailsService {
         }
         user.setNome(user.getNome().trim());
 
-        if (user.getEmail() == null || user.getEmail().isEmpty()) {
+        if (!validarEmail(user.getEmail())) {
             throw new IllegalArgumentException("Email inválido");
         }
         user.setEmail(user.getEmail().trim());
 
-        if (user.getPassword() == null || user.getPassword().isEmpty()
-                || user.getPassword().length() < 6) {
-            throw new IllegalArgumentException("Password inválido");
+        if (user.getPassword() != null && !validarSenha(user.getPassword())) {
+            throw new IllegalArgumentException("Password inválido, deve contar 6 digitos, uma letra maiuscula e uma minuscula");
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
@@ -53,5 +52,13 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         return repository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado com este email"));
+    }
+
+    public boolean validarSenha(String senha) throws IllegalArgumentException{
+        return senha.matches("^(?=.*[a-z])(?=.*[A-Z]).{6,}$");
+    }
+
+    public boolean validarEmail(String email){
+        return email.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$");
     }
 }

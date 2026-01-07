@@ -1,15 +1,19 @@
 package com.pedroscheurer.investress.api.controllers;
 
 import com.pedroscheurer.investress.api.dtos.InvestimentoDTO;
+import com.pedroscheurer.investress.api.dtos.InvestimentoQueryTipo;
 import com.pedroscheurer.investress.api.dtos.InvestimentoResponseDTO;
 import com.pedroscheurer.investress.api.dtos.UserResponseDTO;
 import com.pedroscheurer.investress.api.entities.InvestimentoEntity;
+import com.pedroscheurer.investress.api.entities.TypeInvestimento;
 import com.pedroscheurer.investress.api.services.InvestimentoService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/ws/investimento")
@@ -26,7 +30,7 @@ public class InvestimentoController {
         InvestimentoEntity novoInvestimento = new InvestimentoEntity();
         BeanUtils.copyProperties(dto, novoInvestimento);
 
-        service.save(novoInvestimento"");
+        service.save(novoInvestimento);
 
         return ResponseEntity.status(200).body(retornoBody(novoInvestimento));
     }
@@ -51,6 +55,29 @@ public class InvestimentoController {
         Page<InvestimentoEntity> paginaEncontrada = service.listarPorNome(page, nome);
 
         return ResponseEntity.status(200).body(paginaEncontrada);
+    }
+
+    @GetMapping("/tipo")
+    public ResponseEntity<List<InvestimentoQueryTipo>> buscarAgrupadosPorTipo(){
+        List<InvestimentoQueryTipo> investimentosAgrupados = service.listarAgrupadoPorTipo();
+
+        return ResponseEntity.status(200).body(investimentosAgrupados);
+    }
+
+    @GetMapping("/{tipo}")
+    public ResponseEntity<List<InvestimentoResponseDTO>> buscarPorTipo(@PathVariable TypeInvestimento tipo){
+        List<InvestimentoEntity> investimentosEncontrados = service.listarPorTipo(tipo);
+        List<InvestimentoResponseDTO> response =
+                investimentosEncontrados.stream()
+                        .map(this::retornoBody)
+                        .toList();
+        return ResponseEntity.status(200).body(response);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> buscarPorTipo(@PathVariable Long id){
+        service.excluirInvestimento(id);
+        return ResponseEntity.status(204).body("Investimento deletado com sucesso");
     }
 
     @ExceptionHandler(Exception.class)

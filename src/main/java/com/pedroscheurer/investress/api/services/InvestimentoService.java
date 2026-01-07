@@ -1,6 +1,9 @@
 package com.pedroscheurer.investress.api.services;
 
+import com.pedroscheurer.investress.api.dtos.InvestimentoQueryTipo;
+import com.pedroscheurer.investress.api.dtos.InvestimentoResponseDTO;
 import com.pedroscheurer.investress.api.entities.InvestimentoEntity;
+import com.pedroscheurer.investress.api.entities.TypeInvestimento;
 import com.pedroscheurer.investress.api.entities.UserEntity;
 import com.pedroscheurer.investress.api.repository.InvestimentoRepository;
 import jakarta.transaction.Transactional;
@@ -11,6 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -51,6 +55,18 @@ public class InvestimentoService {
     public Page<InvestimentoEntity> listarPorNome(int pageNumber, String nome) {
         Pageable pageable = PageRequest.of(pageNumber, 15);
         return repository.findByNomeContainsIgnoreCase(nome, pageable);
+    }
+
+    public List<InvestimentoQueryTipo> listarAgrupadoPorTipo(){
+        return repository.findAgrupadoByType();
+    }
+
+    public List<InvestimentoEntity> listarPorTipo(TypeInvestimento typeInvestimento){
+        return repository.findByType(typeInvestimento);
+    }
+
+    public void excluirInvestimento(Long id){
+        repository.deleteById(id);
     }
 
     private void validarInvestimento(InvestimentoEntity investimento) {
