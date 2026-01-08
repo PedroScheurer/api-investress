@@ -4,9 +4,11 @@ import com.pedroscheurer.investress.api.model.SimulationResult;
 import com.pedroscheurer.investress.api.model.StressTestContext;
 import com.pedroscheurer.investress.api.model.enums.StressTestType;
 
+import java.io.IOException;
+
 public interface StressScenarioStrategy {
 
-    public SimulationResult simulate(StressTestContext context);
+    public SimulationResult simulate(StressTestContext context) throws IOException, InterruptedException;
 
     StressTestType getType();
 }

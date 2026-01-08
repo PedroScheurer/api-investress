@@ -9,6 +9,7 @@ import com.pedroscheurer.investress.api.model.enums.StressTestType;
 import com.pedroscheurer.investress.api.scenario.StressScenarioStrategy;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -35,7 +36,7 @@ public class StressTestService {
 
     public List<RiskMetricResult> run(StressTestType scenarioType,
                                       List<RiskMetricType> metricTypes,
-                                      StressTestContext context){
+                                      StressTestContext context) throws IOException, InterruptedException {
 
         StressScenarioStrategy scenarioStrategy = scenarios.get(scenarioType);
 
