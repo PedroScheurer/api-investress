@@ -2,10 +2,13 @@ package com.pedroscheurer.investress.api.services;
 
 import com.pedroscheurer.investress.api.dtos.BrapiQuoteResponse;
 import com.pedroscheurer.investress.api.dtos.BrapiQuoteResult;
+import com.pedroscheurer.investress.api.exceptions.BrapiResponseException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.Instant;
@@ -14,6 +17,7 @@ import java.util.List;
 
 @Service
 @CacheConfig(cacheNames = "quotes")
+@Primary
 public class BrapiMarketDataService implements MarketDataService {
 
     @Value("${BRAPI_TOKEN}")
@@ -42,11 +46,16 @@ public class BrapiMarketDataService implements MarketDataService {
                     token
             );
 
-            BrapiQuoteResponse response =
-                    restTemplate.getForObject(url, BrapiQuoteResponse.class);
+            try {
+                BrapiQuoteResponse response =
+                        restTemplate.getForObject(url, BrapiQuoteResponse.class);
 
-            if (response != null && response.results() != null && !response.results().isEmpty()) {
-                results.add(response.results().getFirst());
+                if (response != null && response.results() != null && !response.results().isEmpty()) {
+                    results.add(response.results().getFirst());
+                }
+
+            } catch (HttpClientErrorException e) {
+                throw new BrapiResponseException(e.getMessage());
             }
 
             Thread.sleep(1500);
