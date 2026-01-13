@@ -1,8 +1,9 @@
-package com.pedroscheurer.investress.api.dtos;
+package com.pedroscheurer.investress.api.dtos.response;
 
 import com.pedroscheurer.investress.api.entities.TypeInvestimento;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public record InvestimentoResponseDTO(Long id,
                                       String nome,
@@ -10,5 +11,6 @@ public record InvestimentoResponseDTO(Long id,
                                       TypeInvestimento type,
                                       BigDecimal valorAtual,
                                       BigDecimal valorInvestido,
+                                      LocalDateTime dataInvestimento,
                                       UserResponseDTO user) {
 }

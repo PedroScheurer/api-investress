@@ -3,7 +3,7 @@ package com.pedroscheurer.investress.api.services;
 import com.pedroscheurer.investress.api.metric.RiskMetricStrategy;
 import com.pedroscheurer.investress.api.model.RiskMetricResult;
 import com.pedroscheurer.investress.api.model.SimulationResult;
-import com.pedroscheurer.investress.api.model.StressTestContext;
+import com.pedroscheurer.investress.api.dtos.request.StressTestContext;
 import com.pedroscheurer.investress.api.model.enums.RiskMetricType;
 import com.pedroscheurer.investress.api.model.enums.StressTestType;
 import com.pedroscheurer.investress.api.scenario.StressScenarioStrategy;

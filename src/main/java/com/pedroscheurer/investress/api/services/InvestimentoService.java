@@ -1,7 +1,6 @@
 package com.pedroscheurer.investress.api.services;
 
-import com.pedroscheurer.investress.api.dtos.InvestimentoQueryTipo;
-import com.pedroscheurer.investress.api.dtos.InvestimentoResponseDTO;
+import com.pedroscheurer.investress.api.dtos.response.InvestimentoQueryTipo;
 import com.pedroscheurer.investress.api.entities.InvestimentoEntity;
 import com.pedroscheurer.investress.api.entities.TypeInvestimento;
 import com.pedroscheurer.investress.api.entities.UserEntity;
@@ -21,7 +20,7 @@ import java.util.Optional;
 @Service
 public class InvestimentoService {
 
-    private InvestimentoRepository repository;
+    private final InvestimentoRepository repository;
 
     public InvestimentoService(InvestimentoRepository repository) {
         this.repository = repository;
@@ -30,8 +29,6 @@ public class InvestimentoService {
 
     @Transactional
     public InvestimentoEntity save(InvestimentoEntity investimento) {
-        validarInvestimento(investimento);
-
         UserEntity user = (UserEntity) Objects.
                 requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getPrincipal();
 
@@ -69,24 +66,5 @@ public class InvestimentoService {
         repository.deleteById(id);
     }
 
-    private void validarInvestimento(InvestimentoEntity investimento) {
-        if (investimento == null) {
-            throw new IllegalArgumentException("Investimento invalido");
-        }
-        if (investimento.getNome() == null || investimento.getNome().isEmpty()) {
-            throw new IllegalArgumentException("Nome do investimento invalido");
-        }
 
-        if (investimento.getValorAtual() == null || investimento.getValorAtual().compareTo(BigDecimal.valueOf(0)) <= 0) {
-            throw new IllegalArgumentException("Valor Atual do investimento invalido");
-        }
-
-        if (investimento.getValorInvestido() == null || investimento.getValorInvestido().compareTo(BigDecimal.valueOf(0)) <= 0) {
-            throw new IllegalArgumentException("Valor Investido do investimento invalido");
-        }
-
-        if (investimento.getType() == null || investimento.getType().toString().isEmpty()) {
-            throw new IllegalArgumentException("Tipo do investimento invalido");
-        }
-    }
 }

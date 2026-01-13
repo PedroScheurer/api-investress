@@ -1,4 +1,4 @@
-package com.pedroscheurer.investress.api.dtos;
+package com.pedroscheurer.investress.api.dtos.response;
 
 import java.util.List;
 

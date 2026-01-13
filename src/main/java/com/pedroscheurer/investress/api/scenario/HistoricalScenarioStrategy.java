@@ -1,10 +1,10 @@
 package com.pedroscheurer.investress.api.scenario;
 
-import com.pedroscheurer.investress.api.dtos.BrapiQuoteResponse;
-import com.pedroscheurer.investress.api.dtos.BrapiQuoteResult;
-import com.pedroscheurer.investress.api.dtos.BrapiQuoteResultHistDataPrice;
+import com.pedroscheurer.investress.api.dtos.response.BrapiQuoteResponse;
+import com.pedroscheurer.investress.api.dtos.response.BrapiQuoteResult;
+import com.pedroscheurer.investress.api.dtos.response.BrapiQuoteResultHistDataPrice;
 import com.pedroscheurer.investress.api.model.SimulationResult;
-import com.pedroscheurer.investress.api.model.StressTestContext;
+import com.pedroscheurer.investress.api.dtos.request.StressTestContext;
 import com.pedroscheurer.investress.api.model.enums.StressTestType;
 import com.pedroscheurer.investress.api.services.MarketDataService;
 import org.springframework.stereotype.Component;
@@ -28,7 +28,7 @@ public class HistoricalScenarioStrategy implements StressScenarioStrategy {
 
     @Override
     public SimulationResult simulate(StressTestContext context) throws InterruptedException, IOException {
-        BrapiQuoteResponse quotes = marketDataService.getQuotes(context.tickers(), context.window());
+        BrapiQuoteResponse quotes = marketDataService.getQuotes(context.typeInvestimento());
 
         Map<Integer, BigDecimal> portfolioByIndex = new HashMap<>();
         for (BrapiQuoteResult q : quotes.results()) {

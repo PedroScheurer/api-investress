@@ -1,12 +1,12 @@
 package com.pedroscheurer.investress.api.exceptions;
 
-public class BrapiResponseException extends RuntimeException{
+public class BrapiResponseException extends RuntimeException {
 
-    public BrapiResponseException (){
+    public BrapiResponseException() {
         super("Erro na requisiçao para API da Brapi");
     }
 
-    public BrapiResponseException(String message){
+    public BrapiResponseException(String message) {
         super(message);
     }
 }

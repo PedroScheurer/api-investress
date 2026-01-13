@@ -3,6 +3,7 @@ package com.pedroscheurer.investress.api.entities;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "tb_investimentos")
@@ -23,6 +24,9 @@ public class InvestimentoEntity {
 
     @Column(name = "retorno_investimento", nullable = false)
     private BigDecimal retornoInvestimento;
+
+    @Column(columnDefinition = "TIMESTAMP")
+    private LocalDateTime dataInvestimento;
 
     @Enumerated(EnumType.STRING)
     private TypeInvestimento type;
@@ -85,5 +89,13 @@ public class InvestimentoEntity {
 
     public void setValorInvestido(BigDecimal valorInvestido) {
         this.valorInvestido = valorInvestido;
+    }
+
+    public LocalDateTime getDataInvestimento() {
+        return dataInvestimento;
+    }
+
+    public void setDataInvestimento(LocalDateTime dataInvestimento) {
+        this.dataInvestimento = dataInvestimento;
     }
 }

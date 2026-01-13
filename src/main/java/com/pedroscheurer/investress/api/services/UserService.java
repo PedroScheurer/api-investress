@@ -21,20 +21,7 @@ public class UserService implements UserDetailsService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public UserEntity save(UserEntity user) throws Exception {
-        if (user == null) {
-            throw new IllegalArgumentException("User não pode ser nulo");
-        }
-
-        if (user.getNome() == null || user.getNome().isEmpty()) {
-            throw new IllegalArgumentException("Nome inválido");
-        }
-        user.setNome(user.getNome().trim());
-
-        if (!validarEmail(user.getEmail())) {
-            throw new IllegalArgumentException("Email inválido");
-        }
-        user.setEmail(user.getEmail().trim());
+    public UserEntity save(UserEntity user) throws IllegalArgumentException{
 
         if (user.getPassword() != null && !validarSenha(user.getPassword())) {
             throw new IllegalArgumentException("Password inválido, deve contar 6 digitos, uma letra maiuscula e uma minuscula");
@@ -56,9 +43,5 @@ public class UserService implements UserDetailsService {
 
     public boolean validarSenha(String senha) throws IllegalArgumentException{
         return senha.matches("^(?=.*[a-z])(?=.*[A-Z]).{6,}$");
-    }
-
-    public boolean validarEmail(String email){
-        return email.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$");
     }
 }

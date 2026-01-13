@@ -1,9 +1,8 @@
-package com.pedroscheurer.investress.api.dtos;
+package com.pedroscheurer.investress.api.dtos.response;
 
 import com.pedroscheurer.investress.api.entities.TypeInvestimento;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 
 public record InvestimentoQueryTipo(
         TypeInvestimento type,

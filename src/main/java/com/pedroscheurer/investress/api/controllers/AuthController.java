@@ -1,12 +1,13 @@
 package com.pedroscheurer.investress.api.controllers;
 
-import com.pedroscheurer.investress.api.dtos.LoginDTO;
-import com.pedroscheurer.investress.api.dtos.RegisterDTO;
-import com.pedroscheurer.investress.api.dtos.UserResponseDTO;
+import com.pedroscheurer.investress.api.dtos.request.LoginDTO;
+import com.pedroscheurer.investress.api.dtos.request.RegisterDTO;
+import com.pedroscheurer.investress.api.dtos.response.UserResponseDTO;
 import com.pedroscheurer.investress.api.entities.TypeUser;
 import com.pedroscheurer.investress.api.entities.UserEntity;
 import com.pedroscheurer.investress.api.services.UserService;
 import com.pedroscheurer.investress.api.utils.JwtUtil;
+import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,7 +30,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserResponseDTO> register(@RequestBody RegisterDTO dto) throws Exception {
+    public ResponseEntity<UserResponseDTO> register(@Valid @RequestBody RegisterDTO dto) throws Exception {
         UserEntity user = new UserEntity();
         BeanUtils.copyProperties(dto, user);
         user.setType(TypeUser.Common);
@@ -44,17 +45,11 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDTO dto) throws AuthenticationException, Exception {
+    public ResponseEntity<String> login(@Valid @RequestBody LoginDTO dto) {
         authConfig
                 .getAuthenticationManager()
                 .authenticate(new UsernamePasswordAuthenticationToken(dto.email(), dto.password()));
         String jwt = jwtUtil.generateToken(dto.email());
         return ResponseEntity.ok(jwt);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> exceptionHandler(Exception e) {
-        String message = e.getMessage().replaceAll("\r\n", "");
-        return ResponseEntity.status(400).body(message);
     }
 }

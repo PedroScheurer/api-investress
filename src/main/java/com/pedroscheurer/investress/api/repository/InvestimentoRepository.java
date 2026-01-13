@@ -1,6 +1,6 @@
 package com.pedroscheurer.investress.api.repository;
 
-import com.pedroscheurer.investress.api.dtos.InvestimentoQueryTipo;
+import com.pedroscheurer.investress.api.dtos.response.InvestimentoQueryTipo;
 import com.pedroscheurer.investress.api.entities.InvestimentoEntity;
 import com.pedroscheurer.investress.api.entities.TypeInvestimento;
 import org.springframework.data.domain.Page;
@@ -19,7 +19,7 @@ public interface InvestimentoRepository extends JpaRepository<InvestimentoEntity
     List<InvestimentoEntity> findByType(TypeInvestimento typeInvestimento);
 
     @Query("""
-            SELECT new com.pedroscheurer.investress.api.dtos.InvestimentoQueryTipo(
+            SELECT new com.pedroscheurer.investress.api.dtos.response.InvestimentoQueryTipo(
                     i.type, COUNT(i), SUM(i.valorAtual), SUM(i.valorInvestido))
             from InvestimentoEntity i GROUP BY i.type
             """)

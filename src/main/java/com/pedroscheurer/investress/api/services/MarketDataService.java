@@ -1,16 +1,15 @@
 package com.pedroscheurer.investress.api.services;
 
-import com.pedroscheurer.investress.api.dtos.BrapiQuoteResponse;
+import com.pedroscheurer.investress.api.dtos.response.BrapiQuoteResponse;
+import com.pedroscheurer.investress.api.entities.TypeInvestimento;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.List;
 
 @Service
 public interface MarketDataService {
 
     BrapiQuoteResponse getQuotes(
-            String[] tickers,
-            String window
+            TypeInvestimento typeInvestimento
     ) throws IOException, InterruptedException;
 }

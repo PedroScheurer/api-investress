@@ -1,18 +1,20 @@
 package com.pedroscheurer.investress.api.controllers;
 
-import com.pedroscheurer.investress.api.dtos.InvestimentoDTO;
-import com.pedroscheurer.investress.api.dtos.InvestimentoQueryTipo;
-import com.pedroscheurer.investress.api.dtos.InvestimentoResponseDTO;
-import com.pedroscheurer.investress.api.dtos.UserResponseDTO;
+import com.pedroscheurer.investress.api.dtos.request.InvestimentoDTO;
+import com.pedroscheurer.investress.api.dtos.response.InvestimentoQueryTipo;
+import com.pedroscheurer.investress.api.dtos.response.InvestimentoResponseDTO;
+import com.pedroscheurer.investress.api.dtos.response.UserResponseDTO;
 import com.pedroscheurer.investress.api.entities.InvestimentoEntity;
 import com.pedroscheurer.investress.api.entities.TypeInvestimento;
 import com.pedroscheurer.investress.api.services.InvestimentoService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -26,10 +28,10 @@ public class InvestimentoController {
     }
 
     @PostMapping
-    public ResponseEntity<InvestimentoResponseDTO> save(@RequestBody InvestimentoDTO dto) {
+    public ResponseEntity<InvestimentoResponseDTO> save(@Valid @RequestBody InvestimentoDTO dto) {
         InvestimentoEntity novoInvestimento = new InvestimentoEntity();
         BeanUtils.copyProperties(dto, novoInvestimento);
-
+        novoInvestimento.setDataInvestimento(LocalDateTime.now());
         service.save(novoInvestimento);
 
         return ResponseEntity.status(200).body(retornoBody(novoInvestimento));
@@ -80,16 +82,9 @@ public class InvestimentoController {
         return ResponseEntity.status(204).body("Investimento deletado com sucesso");
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> exceptionHandler(Exception e) {
-        String message = e.getMessage().replaceAll("\r\n", "");
-        return ResponseEntity.status(400).body(message);
-    }
-
-
     private InvestimentoResponseDTO retornoBody (InvestimentoEntity investimento){
         return new InvestimentoResponseDTO(investimento.getId(), investimento.getNome(),investimento.getRetornoInvestimento(),
-                investimento.getType(), investimento.getValorAtual(), investimento.getValorInvestido(),
+                investimento.getType(), investimento.getValorAtual(), investimento.getValorInvestido(), investimento.getDataInvestimento(),
                 new UserResponseDTO(investimento.getUser().getId(), investimento.getUser().getNome(),
                         investimento.getUser().getEmail(), investimento.getUser().getType()));
     }
