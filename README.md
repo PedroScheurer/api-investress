@@ -163,6 +163,121 @@ As métricas e cenários são informados por **parâmetros na requisição**, en
 
 ---
 
+## 🌐 Endpoints da API
+
+Todos os endpoints da aplicação possuem como **path base**: /api
+
+
+
+### 🔐 Autenticação (`/api/auth`)
+
+Os endpoints de autenticação **não exigem JWT**.
+
+<table>
+  <thead>
+    <tr>
+      <th>Método HTTP</th>
+      <th>Endpoint</th>
+      <th>Autenticação</th>
+      <th>Descrição</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>POST</td>
+      <td>/api/auth/register</td>
+      <td>❌ Não</td>
+      <td>Cadastro de novos usuários</td>
+    </tr>
+    <tr>
+      <td>POST</td>
+      <td>/api/auth/login</td>
+      <td>❌ Não</td>
+      <td>Autenticação do usuário e geração do token JWT</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+### 💰 Investimentos (`/api/ws/investimento`)
+
+⚠️ **Todos os endpoints que possuem `/ws` exigem autenticação via JWT.**
+
+<table>
+  <thead>
+    <tr>
+      <th>Método HTTP</th>
+      <th>Endpoint</th>
+      <th>Parâmetros</th>
+      <th>JWT</th>
+      <th>Descrição</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>POST</td>
+      <td>/api/ws/investimento</td>
+      <td>Body</td>
+      <td>✅ Sim</td>
+      <td>Cadastra um novo investimento</td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>/api/ws/investimento</td>
+      <td>page</td>
+      <td>✅ Sim</td>
+      <td>Lista investimentos de forma paginada</td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>/api/ws/investimento</td>
+      <td>id</td>
+      <td>✅ Sim</td>
+      <td>Busca um investimento pelo identificador</td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>/api/ws/investimento</td>
+      <td>nome, page</td>
+      <td>✅ Sim</td>
+      <td>Busca investimentos pelo nome com paginação</td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>/api/ws/investimento/tipo</td>
+      <td>-</td>
+      <td>✅ Sim</td>
+      <td>Lista todos os investimentos agrupados por tipo</td>
+    </tr>
+    <tr>
+      <td>GET</td>
+      <td>/api/ws/investimento/{tipo}</td>
+      <td>Path Variable: tipo</td>
+      <td>✅ Sim</td>
+      <td>Lista investimentos filtrando pelo tipo de ativo</td>
+    </tr>
+    <tr>
+      <td>DELETE</td>
+      <td>/api/ws/investimento/{id}</td>
+      <td>Path Variable: id</td>
+      <td>✅ Sim</td>
+      <td>Remove um investimento pelo identificador</td>
+    </tr>
+  </tbody>
+</table>
+
+---
+
+## 🔑 Autenticação JWT
+
+Para acessar qualquer endpoint que contenha `/ws`, é obrigatório enviar o token JWT no header da requisição:
+
+```http
+Authorization: Bearer <token>
+```
+---
+
 ## ⚙️ Variáveis de Ambiente
 
 O projeto utiliza variáveis de ambiente para configuração de banco de dados, autenticação e integração externa.  
@@ -185,6 +300,7 @@ JWT_SECRET=secret-key
 
 # Integração Externa
 BRAPI_TOKEN=seu-token-aqui
+```
 
 ## ▶️ Executando o Projeto com Docker Compose (Recomendado)
 
