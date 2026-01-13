@@ -5,6 +5,7 @@ import com.pedroscheurer.investress.api.dtos.response.BrapiQuoteResult;
 import com.pedroscheurer.investress.api.entities.InvestimentoEntity;
 import com.pedroscheurer.investress.api.entities.TypeInvestimento;
 import com.pedroscheurer.investress.api.exceptions.BrapiResponseException;
+import com.pedroscheurer.investress.api.model.RangeInterval;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.Cacheable;
@@ -58,15 +59,16 @@ public class BrapiMarketDataService implements MarketDataService {
 
             String ticket = investimento.getNome();
             LocalDate dataInv = investimento.getDataInvestimento().toLocalDate();
-            String range = calcularRange(dataInv);
+            RangeInterval rangeInterval = calcularRangeInterval(dataInv);
 
 
             //TODO mudar param de interval de acordo com o range
             String url = String.format(
-                    "%s/quote/%s?range=%s&interval=1mo&token=%s",
+                    "%s/quote/%s?range=%s&interval=%s&token=%s",
                     BASE_URL,
                     ticket,
-                    range,
+                    rangeInterval.range(),
+                    rangeInterval.interval(),
                     token
             );
 
@@ -80,7 +82,7 @@ public class BrapiMarketDataService implements MarketDataService {
                         response.results().isEmpty()) {
 
                     throw new BrapiResponseException(
-                            "Resposta vazia da Brapi para o ticker " + ticket
+                            "Resposta vazia da Brapi para o ticket " + ticket
                     );
                 }
 
@@ -90,7 +92,7 @@ public class BrapiMarketDataService implements MarketDataService {
                         result.historicalDataPrice().size() < 2) {
 
                     throw new BrapiResponseException(
-                            "Dados insuficientes para o ticker " + ticket
+                            "Dados insuficientes para o ticket " + ticket
                     );
                 }
 
@@ -111,21 +113,22 @@ public class BrapiMarketDataService implements MarketDataService {
         );
     }
 
-    public String calcularRange(LocalDate dataInvestimento) {
+    public RangeInterval calcularRangeInterval(LocalDate dataInvestimento) {
         long dias = ChronoUnit.DAYS.between(dataInvestimento, LocalDate.now());
 
-        if (dias <= 1) return "1d";
-        if (dias <= 2) return "2d";
-        if (dias <= 5) return "5d";
-        if (dias <= 7) return "7d";
-        if (dias <= 30) return "1mo";
-        if (dias <= 90) return "3mo";
-        if (dias <= 180) return "6mo";
-        if (dias <= 365) return "1y";
-        if (dias <= 730) return "2y";
-        if (dias <= 1825) return "5y";
-        if (dias <= 3650) return "10y";
+        if (dias <= 1) {
+            return new RangeInterval("1d", "1d");
+        }
+        if (dias <= 5) {
+            return new RangeInterval("5d", "1d");
+        }
+        if (dias <= 30) {
+            return new RangeInterval("1mo", "1d");
+        }
+        if (dias <= 90) {
+            return new RangeInterval("3mo", "1wk");
+        }
 
-        return "max";
+        return new RangeInterval("3mo", "1wk");
     }
 }
