@@ -59,7 +59,10 @@ public class InvestimentoService {
     }
 
     public List<InvestimentoEntity> listarPorTipo(TypeInvestimento typeInvestimento){
-        return repository.findByType(typeInvestimento);
+        UserEntity user = (UserEntity) Objects.
+                requireNonNull(SecurityContextHolder.getContext().getAuthentication()).getPrincipal();
+
+        return repository.findByTypeAndUser(typeInvestimento, user);
     }
 
     public void excluirInvestimento(Long id){

@@ -12,11 +12,11 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.math.MathContext;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static com.pedroscheurer.investress.api.utils.Calculator.calculateReturns;
 
 @Component
 public class HistoricalScenarioStrategy implements StressScenarioStrategy {
@@ -52,23 +52,5 @@ public class HistoricalScenarioStrategy implements StressScenarioStrategy {
     @Override
     public StressTestType getType() {
         return StressTestType.HISTORICAL;
-    }
-
-    private List<BigDecimal> calculateReturns(List<BigDecimal> values) {
-
-        List<BigDecimal> returns = new ArrayList<>();
-
-        for (int i = 1; i < values.size(); i++) {
-            BigDecimal previous = values.get(i - 1);
-            BigDecimal current = values.get(i);
-
-            BigDecimal r = current
-                    .subtract(previous)
-                    .divide(previous, MathContext.DECIMAL64);
-
-            returns.add(r);
-        }
-
-        return returns;
     }
 }

@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/stress-test")
+@RequestMapping("/ws/stress-test")
 public class StressTestController {
 
     private final StressTestService service;
